@@ -132,6 +132,13 @@ with lib;
         specify here.
       '';
     };
+    acmeFallbackRecommendedProxySettings = mkOption {
+      type = types.bool;
+      default = false;
+      description = ''
+        Enable recommended proxy settings for ACME fallback.
+      '';
+    };
 
     addSSL = mkOption {
       type = types.bool;

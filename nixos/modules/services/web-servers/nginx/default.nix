@@ -372,6 +372,7 @@ let
             location @acme-fallback {
               auth_basic off;
               auth_request off;
+              ${optionalString (vhost.acmeFallbackRecommendedProxySettings) "include ${recommendedProxyConfig};"}
               proxy_pass http://${vhost.acmeFallbackHost};
             }
           ''}
