@@ -73,15 +73,17 @@ let
     checkPhase = "${pkgs.php}/bin/php --syntax-check $target";
   };
 
+  toPhpString = s: "'${escape [ "'" "\\" ] s}'";
+
   mkPhpValue = v: let
     isHasAttr = s: isAttrs v && hasAttr s v;
   in
-    if isString v then escapeShellArg v
+    if isString v then toPhpString v
     # NOTE: If any value contains a , (comma) this will not get escaped
-    else if isList v && any lib.strings.isCoercibleToString v then escapeShellArg (concatMapStringsSep "," toString v)
+    else if isList v && any lib.strings.isCoercibleToString v then toPhpString (concatMapStringsSep "," toString v)
     else if isInt v then toString v
     else if isBool v then boolToString v
-    else if isHasAttr "_file" then "trim(file_get_contents(${lib.escapeShellArg v._file}))"
+    else if isHasAttr "_file" then "trim(file_get_contents(${lib.toPhpString v._file}))"
     else if isHasAttr "_raw" then v._raw
     else abort "The Wordpress config value ${lib.generators.toPretty {} v} can not be encoded."
   ;
