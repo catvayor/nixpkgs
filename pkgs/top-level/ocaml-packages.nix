@@ -1,10 +1,10 @@
-{ lib, newScope, pkgs, config }:
+{ lib, newScope, pkgs, ocamlPackagesExtensions, config }:
 
 let
   liftJaneStreet = self: super: super.janeStreet // super;
 
-  mkOcamlPackages = ocaml:
-    (lib.makeScope newScope (self: with self;
+  base-packages = ocaml:
+    self: with self;
   {
     inherit ocaml;
 
@@ -2053,7 +2053,12 @@ let
 
     ### End ###
 
-  })).overrideScope liftJaneStreet;
+  };
+
+  mkOcamlPackages = ocaml:
+    (lib.makeScope newScope (
+      lib.extends (lib.composeManyExtensions ocamlPackagesExtensions) (base-packages ocaml)
+    )).overrideScope liftJaneStreet;
 
 in let inherit (pkgs) callPackage; in rec
 {

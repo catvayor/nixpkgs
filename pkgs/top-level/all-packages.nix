@@ -6638,6 +6638,7 @@ with pkgs;
   ocaml-ng = callPackage ./ocaml-packages.nix { };
   ocaml = ocamlPackages.ocaml;
 
+  ocamlPackagesExtensions = [ ];
   ocamlPackages = recurseIntoAttrs ocaml-ng.ocamlPackages;
 
   ocaml-crunch = ocamlPackages.crunch.bin;
